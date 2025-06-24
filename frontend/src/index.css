@@ -1,0 +1,67 @@
+body {
+  background: linear-gradient(135deg, #e0e7ff 0%, #f5f7fa 100%);
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 24px 0 #6c63ff22;
+  max-width: 420px;
+  width: 100%;
+  margin: 2rem auto;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  color: #4338ca;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.button {
+  background: #4338ca;
+  color: #fff;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  transition: background 0.18s;
+}
+.button:disabled {
+  background: #b3b3cc;
+  cursor: not-allowed;
+}
+.button:hover:not(:disabled) {
+  background: #3730a3;
+}
+.status {
+  font-size: 1.1em;
+  margin-bottom: 0.8rem;
+}
+
+label {
+  font-weight: bold;
+}
+pre {
+  background: #f4f4f8;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9em;
+  overflow-x: auto;
+}
+footer {
+  color: #a1a1aa;
+  font-size: 0.9em;
+  margin-top: 2rem;
+  text-align: center;
+}
