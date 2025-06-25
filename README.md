@@ -97,7 +97,7 @@ Organizations must share threat intelligence (CTI) to defend themselves—but pr
 | ZK Proofs for Threat Claims | Prove malware classification without revealing model/data                   |
 | Neural Network Detection    | Keras-based Neural Network trained on EMBER (2381+ features, real malicious/benign data) |
 | Explainable AI (SHAP)       | Feature attribution for every decision, interactive UI                      |
-| EZKL + Halo2 ZK Pipeline    | Auto-generates Halo2 zk-circuits from ONNX format of the original models, no malual zk circuits construction needed   |
+| EZKL + Halo2 ZK Pipeline    | Auto-generates zk-circuits from ONNX format of the original models, no malual zk circuits construction needed   |
 | Proof Sharing | Send only the zk-proof & never the raw sample                         |
 | Intuitive React UI          | Stepper-based workflow, XAI visualizations                  |
 | FastAPI Python Backend      | Secure, modular API for inference, ZK proof generation/verification                      |
