@@ -1,6 +1,12 @@
 function ZkctiAvatarA({ size = 56, style = {}, animate = true }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" style={style} fill="none">
+    <svg
+      width={size}
+      height={size} // Set to 'size' instead of "auto"
+      viewBox="0 0 64 64"
+      style={style}
+      fill="none"
+    >
       {/* Glow */}
       <ellipse cx="32" cy="56" rx="22" ry="6" fill="#b3aaff" opacity="0.18" />
       {/* Animated halo */}
@@ -73,5 +79,6 @@ function ZkctiAvatarA({ size = 56, style = {}, animate = true }) {
     </svg>
   );
 }
+
 
 export default ZkctiAvatarA;

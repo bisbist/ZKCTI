@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Matrix binary rain generator
 function MatrixRain({ width = 180, height = 90, rows = 6, cols = 18 }) {
-  // Quick random array for the "0" and "1"
   const getDigit = () => (Math.random() > 0.5 ? "1" : "0");
   let digits = [];
   for (let y = 0; y < rows; y++) {
@@ -47,7 +46,6 @@ function SpiderWebBg({ size = 280, color = "#5ce8f7", lines = 7, rings = 6 }) {
   const webLines = [];
   const center = size / 2;
   const radStep = (2 * Math.PI) / lines;
-  // Radial lines
   for (let i = 0; i < lines; i++) {
     const angle = i * radStep;
     webLines.push(
@@ -63,7 +61,6 @@ function SpiderWebBg({ size = 280, color = "#5ce8f7", lines = 7, rings = 6 }) {
       />
     );
   }
-  // Rings
   for (let r = 1; r <= rings; r++) {
     webLines.push(
       <circle
@@ -97,7 +94,7 @@ function SpiderWebBg({ size = 280, color = "#5ce8f7", lines = 7, rings = 6 }) {
   );
 }
 
-// Scanlines overlay (subtle animated horizontal lines)
+// Scanlines overlay
 function ScanlinesOverlay({ width = 260, height = 170, speed = 2.1 }) {
   return (
     <svg
@@ -133,7 +130,6 @@ function ScanlinesOverlay({ width = 260, height = 170, speed = 2.1 }) {
   );
 }
 
-// Ripple effect at sample generation
 function Ripple({ show = false, duration = 900 }) {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -143,7 +139,9 @@ function Ripple({ show = false, duration = 900 }) {
       return () => clearTimeout(t);
     }
   }, [show, duration]);
+
   if (!visible) return null;
+
   return (
     <div style={{
       position: "absolute",
@@ -183,29 +181,28 @@ function Ripple({ show = false, duration = 900 }) {
   );
 }
 
-export default function HackerSpinnerPro({ showRipple = false }) {
+export default function HackerSpinnerPro({ showRipple = false, message }) {
   return (
     <div style={{
-      minHeight: 244,
+      minHeight: '50vh',
+      width: '80vw',
       position: "relative",
-      width: 300,
       margin: "0 auto",
       display: "flex",
       alignItems: "center",
       flexDirection: "column",
-      justifyContent: "center"
+      justifyContent: "center",
+      overflow: "hidden"
     }}>
-      {/* Spider Web */}
       <SpiderWebBg size={255} />
-
-      {/* Matrix Rain */}
-      <MatrixRain width={200} height={80} />
-
-      {/* Panel glow pulse */}
+      <MatrixRain width="100%" height="auto" />
       <div style={{
         position: "absolute",
         zIndex: 0,
-        left: "50%", top: 62, width: 196, height: 96,
+        left: "50%", 
+        top: "62%",
+        width: "80%",
+        height: "30%",
         transform: "translateX(-50%)",
         background: "radial-gradient(circle,#1a2347 60%,#3adfa066 95%,#fff0 100%)",
         filter: "blur(16px)",
@@ -219,59 +216,22 @@ export default function HackerSpinnerPro({ showRipple = false }) {
           70% { opacity: 1.00; }
           100% { opacity: 0.84; }
         }
-        @keyframes hoodiePulse {
-          0% { filter: drop-shadow(0 0 8px #6047f7cc);}
-          60% { filter: drop-shadow(0 0 28px #41bc7999);}
-          100% { filter: drop-shadow(0 0 14px #6047f7aa);}
-        }
-        @keyframes screenFlash {
-          0% { opacity: 0.85;}
-          50% { opacity: 0.34;}
-          100% { opacity: 0.97;}
-        }
-        @keyframes handsTap {
-          0% { transform: translateY(0);}
-          50% { transform: translateY(-7px);}
-          100% { transform: translateY(0);}
-        }
         `}
       </style>
-      {/* The Hacker SVG */}
-      <svg width="186" height="158" viewBox="0 0 170 158" style={{ position: "relative", zIndex: 2 }}>
+      <svg width="40vw" height="auto" viewBox="0 0 170 158" style={{ position: "relative", zIndex: 2 }}>
         {/* Hoodie */}
-        <ellipse
-          cx="85" cy="70" rx="56" ry="48"
-          fill="#6047f7"
-          opacity="0.97"
-          style={{ animation: "hoodiePulse 2.5s infinite alternate" }}
-        />
-        {/* Body */}
+        <ellipse cx="85" cy="70" rx="56" ry="48" fill="#6047f7" opacity="0.97" />
         <ellipse cx="85" cy="115" rx="41" ry="24" fill="#222b41" />
-        {/* Face */}
         <ellipse cx="85" cy="86" rx="23" ry="21" fill="#282d49" />
-        {/* Eyes */}
-        <ellipse cx="78" cy="88" rx="4.7" ry="5.6" fill="#7cf9e2">
-          <animate attributeName="cy" values="88;92;88" dur="1.4s" repeatCount="indefinite" />
-        </ellipse>
-        <ellipse cx="93" cy="88" rx="4.7" ry="5.6" fill="#7cf9e2">
-          <animate attributeName="cy" values="88;92;88" dur="1.4s" repeatCount="indefinite" />
-        </ellipse>
-        {/* Hands (animated tap) */}
-        <ellipse cx="61" cy="140" rx="10" ry="5.1" fill="#222b41"
-          style={{ animation: "handsTap 1.15s infinite alternate" }} />
-        <ellipse cx="109" cy="140" rx="10" ry="5.1" fill="#222b41"
-          style={{ animation: "handsTap 0.87s infinite alternate 0.25s" }} />
-        {/* Laptop */}
+        <ellipse cx="78" cy="88" rx="4.7" ry="5.6" fill="#7cf9e2" />
+        <ellipse cx="93" cy="88" rx="4.7" ry="5.6" fill="#7cf9e2" />
+        <ellipse cx="61" cy="140" rx="10" ry="5.1" fill="#222b41" />
+        <ellipse cx="109" cy="140" rx="10" ry="5.1" fill="#222b41" />
         <rect x="62" y="128" width="46" height="16" rx="7" fill="#fafcff" stroke="#6047f7" strokeWidth="2.2" />
-        <rect x="72" y="136" width="26" height="5.7" rx="2" fill="#c5ecf7" style={{ animation: "screenFlash 0.95s infinite alternate" }} />
-        {/* Matrix glare on hoodie */}
-        <ellipse cx="95" cy="54" rx="15" ry="5.6" fill="#fff" opacity="0.09" />
+        <rect x="72" y="136" width="26" height="5.7" rx="2" fill="#c5ecf7" />
       </svg>
-      {/* Scanlines */}
-      <ScanlinesOverlay width={255} height={170} />
-      {/* Ripple (optional, on data gen start) */}
+      <ScanlinesOverlay width="100%" height="auto" />
       <Ripple show={showRipple} duration={1200} />
-      {/* Hacker label */}
       <div style={{
         fontFamily: "monospace",
         color: "#ffffff",
@@ -280,22 +240,7 @@ export default function HackerSpinnerPro({ showRipple = false }) {
         fontWeight: 700,
         marginTop: 9
       }}>
-        Searching for a threat sample...
-      </div>
-      <div style={{
-        color: "#5bf1cb",
-        fontFamily: "monospace",
-        fontSize: "0.99rem",
-        fontWeight: 400,
-        letterSpacing: "0.02em",
-        marginTop: 7,
-        opacity: 0.94
-      }}>
-        <span style={{
-          background: "#2b364c",
-          borderRadius: 9,
-          padding: "2.5px 14px"
-        }}>AI Analyst Mode</span>
+        {message}
       </div>
     </div>
   );

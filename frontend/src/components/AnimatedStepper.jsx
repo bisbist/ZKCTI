@@ -1,6 +1,6 @@
 import React from "react";
 
-function AnimatedStepper({ step, verified = null, debug = false }) {
+function AnimatedStepper({ step, verified = null }) {
   const steps = [
     "Sample Generated",
     "Proof Generated",
@@ -8,31 +8,14 @@ function AnimatedStepper({ step, verified = null, debug = false }) {
     "Proof Verified"
   ];
 
-  if (debug) {
-    console.log("AnimatedStepper rendering. Step prop value:", step);
-  }
-
+  // Don't show ticks for steps that aren't reached
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        margin: "34px 0 14px",
-        border: debug ? "2px dashed red" : undefined,
-        position: "relative",
-        zIndex: 20,
-        background: "none",
-        boxShadow: "none",
-        width: "auto"
-      }}
-    >
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "34px 0 14px" }}>
       {steps.map((label, idx) => {
-        // Determine status of this step
-        const current = idx + 1 === step;
-        const completed = idx + 1 < step || (idx + 1 === step && idx + 1 === steps.length && verified === true);
+        // step=0 means idle, so no current, no completed
+        const current = step === idx + 1;
+        const completed = step > idx + 1;
         const failed = idx + 1 === steps.length && step === steps.length && verified === false;
-
         return (
           <React.Fragment key={label}>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -49,8 +32,6 @@ function AnimatedStepper({ step, verified = null, debug = false }) {
                         : completed
                           ? "#24b655"
                           : "#eee",
-                  boxShadow:
-                    current && !failed ? "0 0 12px #b5a2ff88" : failed ? "0 0 18px #ff4444bb" : undefined,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -66,13 +47,12 @@ function AnimatedStepper({ step, verified = null, debug = false }) {
                   transition: "all 0.22s cubic-bezier(.56,1.36,.56,1)"
                 }}
               >
-                {/* Change content for last step */}
                 {idx + 1 === steps.length && step === steps.length
                   ? (verified === false
-                    ? <span style={{ fontSize: 32, color: "#fff" }}>✗</span> // Red cross
+                    ? <span style={{ fontSize: 32, color: "#fff" }}>✗</span>
                     : (verified === true
-                      ? <span style={{ fontSize: 32, color: "#fff" }}>✓</span> // Green tick
-                      : idx + 1 // show step number if not yet done
+                      ? <span style={{ fontSize: 32, color: "#fff" }}>✓</span>
+                      : idx + 1
                     )
                   )
                   : (completed
@@ -100,31 +80,21 @@ function AnimatedStepper({ step, verified = null, debug = false }) {
                   width: 58,
                   height: 7,
                   background:
-                    idx + 1 < step
+                    completed
                       ? "linear-gradient(90deg,#24b655 40%,#7554ee 90%)"
                       : "#eee",
                   borderRadius: 9,
                   margin: "0 3px",
                   transition: "background 0.19s"
                 }}
-                className={idx + 2 === step ? "stepper-bar-animate" : ""}
               />
             )}
           </React.Fragment>
         );
       })}
-      <style>{`
-        .stepper-bar-animate {
-          animation: progwiggle 1.25s infinite alternate;
-        }
-        @keyframes progwiggle {
-          0% { box-shadow: 0 0 0 0 #7554ee44; }
-          70% { box-shadow: 0 0 10px 5px #7554ee55; }
-          100% { box-shadow: 0 0 0 0 #7554ee44; }
-        }
-      `}</style>
     </div>
   );
 }
+
 
 export default AnimatedStepper;

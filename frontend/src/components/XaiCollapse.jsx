@@ -5,7 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recha
 
 export default function XaiCollapse({ xai }) {
   const [open, setOpen] = useState(false);
-  const [featureCount, setFeatureCount] = useState(15);
+  const [featureCount, setFeatureCount] = useState(16);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -56,8 +56,8 @@ export default function XaiCollapse({ xai }) {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ 
-          type: "spring", 
+        transition={{
+          type: "spring",
           stiffness: 300,
           damping: 25,
           mass: 0.5
@@ -92,16 +92,27 @@ export default function XaiCollapse({ xai }) {
             height: 38,
             fontSize: 24,
             color: "#6047f7",
-            boxShadow: "0 2px 10px rgba(126, 92, 252, 0.1)",
+            boxShadow: "0 2px 10px rgba(255, 0, 0, 0.5)", // Subtle red glow by default
             cursor: "pointer",
             zIndex: 2,
-            transition: "all 0.2s ease",
-            ":hover": {
-              background: "rgba(255,255,255,1)",
-              transform: "scale(1.1)"
-            }
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            transition: "all 0.2s ease", // Smooth transition for all properties
           }}
           aria-label="Close"
+          onMouseEnter={(e) => {
+            e.target.style.boxShadow = "0 0 15px 5px rgba(255, 0, 0, 0.8)"; // Red glow on hover
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.boxShadow = "0 2px 10px rgba(255, 0, 0, 0.5)"; // Subtle red glow when not hovered
+          }}
+          onMouseDown={(e) => {
+            e.target.style.boxShadow = "0 0 25px 10px rgba(255, 0, 0, 1)"; // Stronger red glow on click
+          }}
+          onMouseUp={(e) => {
+            e.target.style.boxShadow = "0 0 15px 5px rgba(255, 0, 0, 0.8)"; // Return to hover glow after click
+          }}
         >
           ×
         </button>
@@ -185,7 +196,7 @@ export default function XaiCollapse({ xai }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          
+
           {/* Table */}
           <div style={{
             flex: 1,
@@ -253,7 +264,7 @@ export default function XaiCollapse({ xai }) {
       >
         ▶ Explain Prediction (SHAP)
       </button>
-      
+
       {createPortal(
         <AnimatePresence>
           {open && ModalContent}
