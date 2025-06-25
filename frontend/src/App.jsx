@@ -87,7 +87,7 @@ function App() {
   const handlePredictAndProof = async () => {
     setShowProofAnim(true);
     try {
-      const predRes = await predict(sample.features);
+      const predRes = await predict(sample.features);      
       setPrediction(predRes.prediction);
       if (predRes.prediction === 0) {
         setShowBenignConfirm(true);
