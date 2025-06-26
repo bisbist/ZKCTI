@@ -8,6 +8,7 @@ import StepperBar from "./components/StepperBar";
 import QuickTourModal from "./components/QuickTourModal";
 import HomePage from "./components/HomePage";
 import ProvePage from "./components/ProvePage";
+import VerifyPage from "./components/VerifyPage"; // <-- NEW: Import your VerifyPage wrapper
 import { tooltips, glassCSS, HEADER_HEIGHT, STEPPER_HEIGHT, FOOTER_HEIGHT } from "./components/Constants";
 
 // Helper to check if proveResult is a valid result object
@@ -48,7 +49,7 @@ function App() {
 function AppFrame({ darkMode, onToggleDarkMode, showTour, setShowTour }) {
   const location = useLocation();
 
-  // Improved: determine if session is "complete" using helper
+  // Determine if session is "complete" using helper
   const proveResult = location.state?.proveResult || null;
   const isComplete = isValidProveResult(proveResult);
 
@@ -56,6 +57,7 @@ function AppFrame({ darkMode, onToggleDarkMode, showTour, setShowTour }) {
   let stepper = 1;
   if (location.pathname === "/" && isComplete) stepper = 3;
   if (location.pathname === "/prove") stepper = 1;
+  if (location.pathname === "/verify") stepper = 3; // After proof is sent
 
   const mainMinHeight = `calc(100vh - ${HEADER_HEIGHT + STEPPER_HEIGHT + FOOTER_HEIGHT + 18}px)`;
 
@@ -82,6 +84,7 @@ function AppFrame({ darkMode, onToggleDarkMode, showTour, setShowTour }) {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/prove" element={<ProvePage />} />
+          <Route path="/verify" element={<VerifyPage />} /> {/* <-- NEW Route */}
         </Routes>
       </main>
       <StepperBar stepper={stepper} />

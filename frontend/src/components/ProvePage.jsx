@@ -1,23 +1,31 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HackerSpinnerPro from "../components/HackerSpinnerPro";
+import XaiCollapse from "../components/XaiCollapse";
+import BenignConfirmModal from "./BenignConfirmModal";
 import { getRandomSample, predict, generateProof } from "../api";
+import ZkctiAvatarA from "../components/ZkctiAvatarA";
 import "../App.css";
 
 const mainButtonStyle = {
-  background: "#7554ee",
-  backgroundImage: "linear-gradient(90deg,#7554ee 70%,#24b655 100%)",
+  background: "linear-gradient(90deg,#7b48ff 0%,#17b26a 100%)",
   color: "#fff",
   border: "none",
   borderRadius: 12,
-  fontWeight: 700,
-  fontSize: "1.14rem",
+  fontWeight: 800,
+  fontSize: "2rem",
   padding: "13px 32px",
   cursor: "pointer",
-  boxShadow: "0 2px 16px #0008",
-  marginTop: 12,
-  zIndex: 10,
-  transition: "all 0.3s ease",
+  boxShadow: "0 2px 16px #7b48ff33",
+  marginTop: 1,
+  transition: "all 0.3s",
+  outline: "none",
+  borderBottom: "2.5px solid #6047f7",
+  display: "inline-block",
+  visibility: "visible !important",
+  opacity: "1 !important",
+  position: "relative",
+  zIndex: 1,
 };
 
 export default function ProvePage() {
@@ -26,6 +34,16 @@ export default function ProvePage() {
   const [sample, setSample] = useState(null);
   const [prediction, setPrediction] = useState(null);
   const [xai, setXai] = useState(null);
+  const [showXai, setShowXai] = useState(false);
+  const [proofGenerated, setProofGenerated] = useState(false);
+
+  // NEW: Benign modal state
+  const [showBenignModal, setShowBenignModal] = useState(false);
+  const [pendingProof, setPendingProof] = useState(false);
+
+  const getAvatarSize = () => {
+    return (stage === "loading" || stage === "proving") ? 100 : 300;
+  };
 
   const transitionButtons = [
     {
@@ -52,28 +70,109 @@ export default function ProvePage() {
     {
       label: "Generate Proof",
       onClick: async () => {
+        // Intercept benign case:
+        if (prediction === 0) {
+          setShowBenignModal(true);
+          setPendingProof(true);
+          return;
+        }
         setStage("proving");
         await generateProof();
         setStage("done");
-        setTimeout(() => {
-          navigate("/", {
-            replace: true,
-            state: {
-              proveResult: {
-                prediction,
-                proofStatus: "Proof Created",
-                xai,
-              },
-            },
-          });
-        }, 1000);
+        setProofGenerated(true);
       },
       stage: "proof",
     },
   ];
 
+  // Handler for confirming in modal
+  const handleBenignConfirm = async () => {
+    setShowBenignModal(false);
+    setStage("proving");
+    await generateProof();
+    setStage("done");
+    setProofGenerated(true);
+    setPendingProof(false);
+  };
+
+  // Handler for cancel in modal
+  const handleBenignCancel = () => {
+    setShowBenignModal(false);
+    setPendingProof(false);
+    // Stay on current stage
+  };
+
+  // After proof is generated
+  if (stage === "done" && proofGenerated) {
+    return (
+      <CenterPanel avatarSize={300}>
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+          gap: "20px",
+          marginTop: "40px"
+        }}>
+          <div style={{
+            ...mainButtonStyle,
+            background: prediction === 1
+              ? "linear-gradient(90deg, #ff4848 0%, #d12e6a 100%)"
+              : "linear-gradient(90deg, #17b26a 0%, #48b0ff 100%)",
+            borderBottom: prediction === 1
+              ? "2.5px solid #d12e6a"
+              : "2.5px solid #17b26a",
+            boxShadow: prediction === 1
+              ? "0 2px 16px #ff484833"
+              : "0 2px 16px #17b26a33",
+            textAlign: "center",
+            cursor: "default",
+          }}>
+            {prediction === 1 ? "Malicious Threat Detected" : "Predicted Result: Benign"}
+          </div>
+
+          <button
+            style={{
+              ...mainButtonStyle,
+              marginTop: 30
+            }}
+            onClick={() => setShowXai(!showXai)}
+          >
+            {showXai ? "Hide Explanation" : "Explain Prediction (SHAP)"}
+          </button>
+
+          {showXai && xai && (
+            <div style={{ margin: "0", width: "100%" }}>
+              <XaiCollapse
+                xai={xai}
+                open={showXai}
+                onClose={() => setShowXai(false)}
+              />
+            </div>
+          )}
+
+          <button
+            style={mainButtonStyle}
+            onClick={() => {
+              navigate("/verify", {
+                state: {
+                  proofData: {
+                    prediction,
+                    xai,
+                  },
+                },
+              });
+            }}
+          >
+            Send Proof to Company B
+          </button>
+        </div>
+      </CenterPanel>
+    );
+  }
+
   return (
-    <CenterPanel>
+    <CenterPanel avatarSize={getAvatarSize()}>
       {stage === "loading" || stage === "predicting" || stage === "proving" ? (
         <HackerSpinnerPro
           showRipple
@@ -81,8 +180,8 @@ export default function ProvePage() {
             stage === "loading"
               ? "Searching for a threat sample..."
               : stage === "predicting"
-              ? "Predicting..."
-              : "Generating a zero knowledge proof..."
+                ? "Predicting..."
+                : "Generating a zero knowledge proof..."
           }
         />
       ) : (
@@ -108,33 +207,69 @@ export default function ProvePage() {
       {stage === "proving" && (
         <div style={{ marginTop: 28, color: "#222" }}>Generating proof...</div>
       )}
+      {/* Render the benign confirm modal */}
+      <BenignConfirmModal
+        show={showBenignModal}
+        onConfirm={handleBenignConfirm}
+        onCancel={handleBenignCancel}
+      />
     </CenterPanel>
   );
 }
 
-function CenterPanel({ children }) {
+function CenterPanel({ children, avatarSize = 300 }) {
+  // Calculate dynamic positioning based on avatar size
+  const avatarStyles = {
+    small: {
+      marginBottom: "-30px",
+      transform: "translateY(-20px)",
+      marginTop: "0px"
+    },
+    large: {
+      marginBottom: "-80px",
+      transform: "translateY(-40px)",
+      marginTop: "20px"
+    }
+  };
+
+  const currentAvatarStyle = avatarSize === 100 ? avatarStyles.small : avatarStyles.large;
+
   return (
-    <div
-      style={{
-        minHeight: "calc(100vh - 250px)",
+    <div style={{
+      minHeight: "calc(100vh - 250px)",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      background: "#fff",
+      border: "1px solid #ede9ff",
+      paddingTop: "20px",
+    }}>
+      {/* Avatar with dynamic sizing and positioning */}
+      <div style={{
+        ...currentAvatarStyle,
+        zIndex: 10,
+        transition: "all 0.3s ease-out"
+      }}>
+        <ZkctiAvatarA size={avatarSize} />
+      </div>
+
+      {/* Main content container */}
+      <div style={{
+        background: "#fff",
+        borderRadius: 22,
+        boxShadow: "0 8px 40px #b5a2ff33",
+        padding: "50px 42px",
+        minWidth: 330,
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          background: "rgba(255,255,255,0.97)",
-          borderRadius: 22,
-          boxShadow: "0 8px 40px #b5a2ff33",
-          padding: "50px 42px",
-          minWidth: 330,
-          minHeight: 230,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+        color: "#222",
+        maxWidth: "90%",
+        width: "100%",
+        marginTop: avatarSize === 100 ? "20px" : "60px",
+        transition: "margin-top 0.3s ease-out"
+      }}>
         {children}
       </div>
     </div>

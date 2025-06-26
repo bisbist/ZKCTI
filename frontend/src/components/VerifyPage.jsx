@@ -1,33 +1,35 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useProof } from "../context/ProofContext";
-import ProofGeneratingAnimation from "./ProofGeneratingAnimation";
+import { useLocation, useNavigate } from "react-router-dom";
+import CompanyPanelB from "./CompanyPanelB"; // Your B Panel
+import ZkctiAvatarB from "./ZkctiAvatarB"; // Your B Avatar
 
 export default function VerifyPage() {
-  const { verifyProof } = useProof();
+  const location = useLocation();
   const navigate = useNavigate();
-  const [error, setError] = React.useState(null);
 
-  React.useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        await verifyProof(); // Should update 'verified' in context
-        setTimeout(() => mounted && navigate("/"), 1200); // Give time for UX
-      } catch (err) {
-        setError("Error verifying proof");
-        setTimeout(() => mounted && navigate("/"), 1600);
-      }
-    })();
-    return () => { mounted = false; };
-  }, [verifyProof, navigate]);
+  // Proof info (optional)
+  const proofData = location.state?.proofData || null;
 
   return (
-    <div className="zkcti-app" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <ProofGeneratingAnimation show />
-      <h2 style={{ marginTop: 40, color: "#24b655", fontWeight: 700 }}>
-        {error ? error : "Verifying zero-knowledge proof..."}
-      </h2>
+    <div style={{
+      minHeight: "calc(100vh - 450px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexDirection: "column",
+      gap: "0px",
+    }}>
+      <div style={{
+        marginBottom: "-30px",
+        transform: "translateY(-60px)",
+      }}>
+        <ZkctiAvatarB size={300} />
+      </div>
+
+      <CompanyPanelB
+        proofData={proofData}
+        onBack={() => navigate("/")}
+      />
     </div>
   );
 }

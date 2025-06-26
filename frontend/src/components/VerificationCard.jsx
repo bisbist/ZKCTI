@@ -42,21 +42,21 @@ const VerificationSuccessAnimation = () => (
 
     <h3 style={{
       marginTop: 20,
-      color: '#ffffff',
-      fontSize: '1.5rem',
+      color: '#1a3b1a',  // changed from white to strong green-black
+      fontSize: '1.7rem',
       fontWeight: 600,
-      textAlign: 'center'
+      textAlign: 'center',
+      textShadow: '0 2px 8px rgba(75,181,67,0.18)'
     }}>
       Proof Verified Successfully!
     </h3>
 
-    <style jsx>{`
+    <style>{`
       @keyframes checkmarkPop {
         0% { transform: scale(0); opacity: 0; }
         80% { transform: scale(1.1); opacity: 1; }
         100% { transform: scale(1); opacity: 1; }
       }
-      
       @keyframes floatParticles {
         0% { transform: translate(0, 0); opacity: 0; }
         50% { opacity: 0.7; }
@@ -108,21 +108,21 @@ const VerificationFailedAnimation = () => (
 
     <h3 style={{
       marginTop: 20,
-      color: '#ff4444',
+      color: '#7a0c16',  // changed from #ff4444 to deeper red for contrast
       fontSize: '1.5rem',
       fontWeight: 600,
-      textAlign: 'center'
+      textAlign: 'center',
+      textShadow: '0 2px 8px rgba(255,44,44,0.15)'
     }}>
       Proof Verification Failed!
     </h3>
 
-    <style jsx>{`
+    <style>{`
       @keyframes xMarkShake {
         0%, 100% { transform: rotate(0deg); }
         10%, 30%, 50%, 70%, 90% { transform: rotate(-3deg); }
         20%, 40%, 60%, 80% { transform: rotate(3deg); }
       }
-      
       @keyframes shatter {
         0% { opacity: 0; transform: translate(0, 0) scale(0); }
         50% { opacity: 1; transform: translate(${Math.random() * 40 - 20}px, ${Math.random() * 40 - 20}px) scale(1); }
@@ -132,7 +132,8 @@ const VerificationFailedAnimation = () => (
   </div>
 );
 
-export const VerificationCard = ({ verified }) => (
+// The card:
+const VerificationCard = ({ verified }) => (
   <div className="glass-panel" style={{
     padding: '25px',
     borderRadius: '20px',
@@ -156,33 +157,34 @@ export const VerificationCard = ({ verified }) => (
       width: '100%',
       height: '100%',
       background: verified
-        ? 'radial-gradient(circle, rgba(75, 181, 67, 0.15) 0%, transparent 70%)'
-        : 'radial-gradient(circle, rgba(255, 68, 68, 0.15) 0%, transparent 70%)',
+        ? 'radial-gradient(circle, rgba(75, 181, 67, 0.13) 0%, transparent 70%)'
+        : 'radial-gradient(circle, rgba(255, 68, 68, 0.11) 0%, transparent 70%)',
       animation: 'pulse 4s infinite alternate'
     }} />
 
     {verified ? <VerificationSuccessAnimation /> : <VerificationFailedAnimation />}
 
+    {/* --- Text fixed for contrast --- */}
     <div style={{
       textAlign: 'center',
       marginTop: '15px',
       color: verified
-        ? '#ffffff'  // White text for success
-        : '#ff2a2a', // Bright red text for failure
-      fontSize: '1.1rem',
-      fontWeight: 500,
+        ? '#164a21'   // Strong green for text
+        : '#bb0a2b',  // Strong red for text
+      fontSize: '1.4rem',
+      fontWeight: 600,
       textShadow: verified
-        ? '0 1px 3px rgba(0,0,0,0.3)'
-        : '0 1px 2px rgba(255,255,255,0.3)',
-      padding: '10px 15px',
+        ? '0 1px 3px rgba(120,230,140,0.13)'
+        : '0 1px 2px rgba(220,0,0,0.13)',
+      padding: '10px 100px',
       background: verified
-        ? 'rgba(0,0,0,0.15)'
-        : 'rgba(255,255,255,0.7)',
+        ? 'rgba(255,255,255,0.75)'
+        : 'rgba(255,240,240,0.94)',
       borderRadius: '8px',
       display: 'inline-block'
     }}>
       {verified
-        ? 'The proof was successfully verified. Trust established!'
+        ? 'Trust established!'
         : 'The proof could not be verified.'}
     </div>
 
@@ -196,8 +198,8 @@ export const VerificationCard = ({ verified }) => (
         border: '1px dashed rgba(255, 100, 100, 0.5)'
       }}>
         <div style={{
-          color: '#cc0000',
-          fontSize: '0.9rem',
+          color: '#bb0a2b',
+          fontSize: '0.95rem',
           textAlign: 'center'
         }}>
           Tip: Check your proof parameters and model constraints
@@ -205,7 +207,7 @@ export const VerificationCard = ({ verified }) => (
       </div>
     )}
 
-    <style jsx>{`
+    <style>{`
       @keyframes pulse {
         0% { opacity: 0.3; transform: scale(0.98); }
         100% { opacity: 0.7; transform: scale(1.02); }
@@ -213,3 +215,5 @@ export const VerificationCard = ({ verified }) => (
     `}</style>
   </div>
 );
+
+export default VerificationCard;

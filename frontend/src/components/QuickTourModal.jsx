@@ -41,7 +41,7 @@ export default function QuickTourModal({ show, onClose, darkMode }) {
           fontSize: "1.07rem", letterSpacing: "0.01em",
           background: "rgba(240,240,240,0.95)", borderRadius: 7, padding: "7px 15px", display: "inline-block"
         }}>
-          🔒 NOTE: No sensitive data is shared—only cryptographic proofs.
+          🔒 NOTE: No sensitive data is shared—only cryptographic proofs are shared.
         </div>
       </div>
     </div>

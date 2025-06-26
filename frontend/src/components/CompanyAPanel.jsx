@@ -89,7 +89,7 @@ export default function CompanyAPanel({
         style={{
           fontWeight: 700,
           color: "#6047f7",
-          fontSize: "1.4rem",
+          fontSize: "1.9rem",
           marginBottom: "20px",
           textAlign: "center",
           position: "relative",
@@ -248,7 +248,7 @@ export default function CompanyAPanel({
           {/* Initial State */}
           <div
             style={{
-              fontSize: "1.15rem",
+              fontSize: "1.5rem",
               color: "#555",
               textAlign: "center",
               fontWeight: 500,
@@ -271,7 +271,7 @@ export default function CompanyAPanel({
               border: "none",
               borderRadius: "14px",
               fontWeight: 700,
-              fontSize: "1.15rem",
+              fontSize: "1.9rem",
               padding: "16px 36px",
               cursor: "pointer",
               margin: "0 auto",

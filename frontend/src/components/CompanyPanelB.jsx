@@ -1,147 +1,133 @@
-import React from "react";
-import ZkctiAvatarB from "./ZkctiAvatarB";  // Assuming this is an avatar component
-import { VerificationCard } from "./VerificationCard";  // Assuming this displays the verification results
+import React, { useState } from "react";
+import { verifyProof } from "../api"; // Adjust as needed
+import VerificationCard from "./VerificationCard";
 
-export default function CompanyBPanel({
-  step,
-  verified,
-  handleVerify,
-  loading,
-  companyBPanelRef
-}) {
-  return (
-    <div
-      className="company company-b glass-panel"
-      style={{
-        background: "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(245,243,255,0.98) 100%)",
-        borderRadius: "24px",
-        boxShadow: `
-          0 4px 6px -1px rgba(96, 71, 247, 0.1),
-          0 2px 4px -1px rgba(96, 71, 247, 0.06),
-          0 25px 50px -12px rgba(96, 71, 247, 0.25)
-        `,
-        padding: "48px 40px",
-        minWidth: "45vw",
-        maxWidth: "40vw",
-        minHeight: "30vw",
-        margin: "0 auto",
+export default function CompanyBPanel({ proofData, onBack }) {
+  const [verifying, setVerifying] = useState(false);
+  const [verified, setVerified] = useState(null);
+
+  async function handleVerify() {
+    setVerifying(true);
+    try {
+      const res = await verifyProof();
+      setVerified(res.verified);
+    } catch (err) {
+      setVerified(false);
+    }
+    setVerifying(false);
+  }
+
+  // Fullscreen verification animation overlay
+  const verificationOverlay = verified !== null && (
+    <div style={{
+      position: "fixed",
+      inset: 0,
+      background: verified ? "rgba(36,182,85,0.09)" : "rgba(240,39,39,0.11)",
+      backdropFilter: "blur(6px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 5000,
+      animation: "fadein 0.5s"
+    }}>
+      <div style={{
+        background: "rgba(255,255,255,0.99)",
+        borderRadius: 18,
+        boxShadow: "0 6px 40px #a8e4a166",
+        padding: 46,
+        minWidth: 360,
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        gap: "20px",
-        color: "#1a1a1a",
-        zIndex: 10,
-        border: "1px solid rgba(224, 216, 255, 0.5)",
-        backdropFilter: "blur(8px)",
-        position: "relative",
-        overflow: "hidden",
-        transition: "all 0.3s ease-out"
-      }}
-      ref={companyBPanelRef}
-    >
-      {/* Avatar and Header */}
-      <ZkctiAvatarB size={56} style={{ marginBottom: 10 }} animate />
-      <h2 style={{ marginBottom: 6, textAlign: "center" }}>
-        Company B<br />(Verifier)
-      </h2>
-
-      {/* Status Section */}
-      <ul style={{
-        marginBottom: 18,
-        color: "#111",
-        fontWeight: 600,
-        textAlign: "center"
+        alignItems: "center"
       }}>
-        <span style={{ color: "#111" }}>Status:</span>
-        <span
-          className="status-ok"
-          style={{
-            color: "#fff",
-            textShadow:
-              step === 5
-                ? verified
-                  ? "0 1px 5px #24b655, 0 0 1px #111"
-                  : "0 1px 5px #ff4444, 0 0 1px #111"
-                : "0 1px 5px #24b655, 0 0 1px #111",
-            fontWeight: 700,
-            letterSpacing: 0.2,
-          }}
-        >
-          {step === 5
-            ? verified ? "Verified" : "Verification Failed"
-            : "Available"}
-        </span>
-      </ul>
-
-      {/* Proof Status - Awaiting Proof from Company A */}
-      {step < 4 && (
-        <div
-          style={{
-            background: "rgba(200, 200, 255, 0.1)",
-            borderRadius: 12,
-            padding: 20,
-            textAlign: "center",
-            marginBottom: 20,
-            border: "1px dashed rgba(100, 100, 255, 0.3)"
-          }}
-        >
-          <div style={{ opacity: 0.7 }}>
-            Awaiting proof from Company A...
-          </div>
-        </div>
-      )}
-
-      {/* Verification Button - Step 4 */}
-      {step === 4 && (
+        <VerificationCard verified={verified} />
         <button
-          className="w-full bg-green-600 text-white font-semibold py-2 rounded hover:bg-green-700 transition mb-2"
-          onClick={handleVerify}
-          disabled={loading}
           style={{
-            background: "linear-gradient(90deg, #7554ee 0%, #24b655 100%)",
-            color: "#fff",
-            border: "none",
-            borderRadius: "12px",
-            fontWeight: 700,
-            fontSize: "1.2rem",
-            padding: "16px 36px",
+            marginTop: 30,
+            background: "#f6f7fb",
+            border: "1.2px solid #7554ee77",
+            borderRadius: 9,
+            color: "#7554ee",
+            fontWeight: 600,
+            padding: "13px 30px",
+            fontSize: "1.09rem",
             cursor: "pointer",
-            marginTop: "20px",
-            boxShadow: "0 4px 14px rgba(117, 84, 238, 0.35)",
-            transition: "all 0.2s ease",
-            position: "relative",
-            overflow: "hidden"
+            boxShadow: "0 2px 16px #7554ee23",
+            letterSpacing: "0.02em"
           }}
+          onClick={onBack}
         >
-          {loading ? "Verifying..." : "Verify Proof"}
-          <span
-            style={{
-              position: "absolute",
-              top: "-50%",
-              left: "-50%",
-              width: "200%",
-              height: "200%",
-              background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%)",
-              transform: "rotate(30deg)",
-              transition: "all 0.6s ease",
-              opacity: 0
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.left = "100%";
-              e.target.style.opacity = 1;
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.left = "-50%";
-              e.target.style.opacity = 0;
-            }}
-          ></span>
+          Back to Home
+        </button>
+      </div>
+      <style>{`
+        @keyframes fadein {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+      `}</style>
+    </div>
+  );
+
+  return (
+    <div style={{
+      background: "rgba(255,255,255,0.97)",
+      borderRadius: 22,
+      boxShadow: "0 8px 40px #b5a2ff22",
+      padding: "44px 36px",
+      minWidth: 440,
+      maxWidth: 520,
+      minHeight: 280,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 18,
+      color: "#222",
+      zIndex: 10,
+      position: "relative"
+    }}>
+      <div style={{
+        fontWeight: 700, color: "#024", fontSize: "2.18rem", marginBottom: 16
+      }}>
+        Company B (Verifier)
+      </div>
+      <div style={{ fontSize: "1.5rem", color: "#6047f7", marginBottom: 20 }}>
+        Proof Received From Company A!
+      </div>
+      <div style={{fontSize: "1.5rem"}}>
+        <b>Prediction:</b>{" "}
+        <span style={{ color: proofData?.prediction === 1 ? "#e54769" : "#24b655" }}>
+          {proofData?.prediction === 1 ? "Malicious" : "Benign"}
+        </span>
+      </div>
+
+      {/* Show Verify button until verification is done */}
+      {verified === null && (
+        <button
+          style={{
+            marginTop: 40,
+            marginBottom: 15,
+            background: "#7554ee",
+            backgroundImage: "linear-gradient(90deg,#7554ee 70%,#24b655 100%)",
+            border: "none",
+            borderRadius: 9,
+            color: "#fff",
+            fontWeight: 700,
+            padding: "11px 32px",
+            fontSize: "2.08rem",
+            cursor: verifying ? "not-allowed" : "pointer",
+            opacity: verifying ? 0.7 : 1,
+            boxShadow: "0 2px 16px #7554ee33"
+          }}
+          onClick={handleVerify}
+          disabled={verifying}
+        >
+          {verifying ? "Verifying..." : "Verify Proof"}
         </button>
       )}
 
-      {/* Verification Card - Step 5 */}
-      {step === 5 && (
-        <VerificationCard verified={verified} />
-      )}
+      {/* Show the fullscreen overlay when verified */}
+      {verificationOverlay}
     </div>
   );
 }
