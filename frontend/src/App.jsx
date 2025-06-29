@@ -4,12 +4,31 @@ import AnimatedBackground from "./components/AnimatedBackground";
 import HeaderBar from "./components/HeaderBar";
 import TooltipStep from "./components/TooltipStep";
 import FooterBar from "./components/FooterBar";
-import StepperBar from "./components/StepperBar";
 import QuickTourModal from "./components/QuickTourModal";
 import HomePage from "./components/HomePage";
 import ProvePage from "./components/ProvePage";
 import VerifyPage from "./components/VerifyPage"; // <-- NEW: Import your VerifyPage wrapper
 import { tooltips, glassCSS, HEADER_HEIGHT, STEPPER_HEIGHT, FOOTER_HEIGHT } from "./components/Constants";
+// import StepperBar from "./components/StepperBar";
+
+function HowThisWorksButton({ onClick, style }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        ...style,
+        transform: hovered ? "scale(1.25)" : "scale(1)",
+        transition: "transform 0.19s cubic-bezier(.53,1.54,.37,1.03)"
+      }}
+    >
+      How this works?
+    </button>
+  );
+}
 
 // Helper to check if proveResult is a valid result object
 function isValidProveResult(result) {
@@ -70,7 +89,7 @@ function AppFrame({ darkMode, onToggleDarkMode, showTour, setShowTour }) {
     }}>
       <AnimatedBackground />
       <HeaderBar darkMode={darkMode} onToggleDarkMode={onToggleDarkMode} />
-      <TooltipStep step={stepper} tooltips={tooltips} />
+      {/* <TooltipStep step={stepper} tooltips={tooltips} /> */}
       <main
         style={{
           minHeight: mainMinHeight,
@@ -87,27 +106,25 @@ function AppFrame({ darkMode, onToggleDarkMode, showTour, setShowTour }) {
           <Route path="/verify" element={<VerifyPage />} /> {/* <-- NEW Route */}
         </Routes>
       </main>
-      <StepperBar stepper={stepper} />
+      {/* <StepperBar stepper={stepper} /> */}
       <FooterBar />
-      <button
+      <HowThisWorksButton
         onClick={() => setShowTour(true)}
         style={{
           position: "fixed",
           right: 30,
-          bottom: FOOTER_HEIGHT + STEPPER_HEIGHT - 14,
+          bottom: FOOTER_HEIGHT + STEPPER_HEIGHT - 40,
           background: "#6047f7",
           color: "#fff",
           border: "none",
           borderRadius: 14,
           padding: "11px 23px",
           fontWeight: 600,
-          fontSize: "1.07rem",
+          fontSize: "1.27rem",
           boxShadow: "0 2px 16px #6047f733",
           zIndex: 300,
         }}
-      >
-        How this works?
-      </button>
+      />
       <QuickTourModal show={showTour} onClose={() => setShowTour(false)} darkMode={darkMode} />
     </div>
   );
