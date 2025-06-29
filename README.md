@@ -8,8 +8,8 @@
 </p>
 
 <p align="center">
-  <a href="https://drive.google.com/file/d/1td3YwCyhqmxzGy0MV_w73hrkquH23yyy/view?usp=sharing" target="_blank" style="font-size:2rem; font-weight:800">
-    🚀 ZKCTI Demo &rarr;
+  <a href="https://drive.google.com/file/d/1td3YwCyhqmxzGy0MV_w73hrkquH23yyy/view?usp=sharing" target="_blank">
+    <img src="frontend/public/demo.png" alt="ZKCTI Demo" height="90"/>
   </a>
 </p>
 
