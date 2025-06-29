@@ -8,15 +8,9 @@
 </p>
 
 <p align="center">
-  <a href="https://drive.google.com/file/d/1td3YwCyhqmxzGy0MV_w73hrkquH23yyy/view?usp=sharing" target="_blank" style="font-size:1.7rem; font-weight:900; color:#fff; background:linear-gradient(90deg,#6047f7 70%,#24b655 120%); padding:21px 50px; border-radius:19px; box-shadow:0 10px 32px #6047f788; display:inline-block; text-decoration:none; margin:30px 0 24px;">
-    <span style="font-size:2.6rem; vertical-align:middle;">🛡️</span>
-    <span style="margin: 0 10px"> </span>
-    <span style="vertical-align:middle;">🚀 <b>ZKCTI Demo</b> &rarr;</span>
-    <span style="margin: 0 10px"> </span>
-    <span style="font-size:2.2rem; vertical-align:middle;">🔒</span>
+  <a href="https://drive.google.com/file/d/1td3YwCyhqmxzGy0MV_w73hrkquH23yyy/view?usp=sharing" target="_blank" style="font-size:2rem; font-weight:800">
+    🚀 ZKCTI Demo &rarr;
   </a>
-  <br>
-  <img src="https://img.shields.io/badge/Privacy%20First-%234bb543?style=for-the-badge&logo=vercel&logoColor=white"/>
 </p>
 
 ---
