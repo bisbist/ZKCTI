@@ -4,7 +4,13 @@
 > **A privacy-first, collaborative, and explainable platform for cyber threat intelligence sharing and  verification platform —combining neural networks, explainable AI (XAI), and next-generation zero-knowledge proofs framework (EZKL with Halo2 at it's core).**
 
 <p align="center">
-  <img src="frontend/public/zkcti-logo.svg" alt="zkcti logo" height="300" width="300"/>
+  <img src="frontend/public/zkcti-logo.svg" alt="zkcti logo" height="350" width="350"/>
+</p>
+
+<p align="center">
+  <a href="https://drive.google.com/file/d/1td3YwCyhqmxzGy0MV_w73hrkquH23yyy/view?usp=sharing" target="_blank">
+    <img src="frontend/public/demo.png" alt="ZKCTI Demo" height="90"/>
+  </a>
 </p>
 
 ---
@@ -214,6 +220,7 @@ zkcti/
 
 ---
 
+
 ## ⚡ Quickstart & Setup
 
 ### 1. Clone and Prepare Environment
@@ -221,11 +228,61 @@ zkcti/
 ```sh
 git clone https://github.com/bisbist/zkcti.git
 cd zkcti
-conda create --name zkcti python=3.9 -y
-conda activate zkcti
+conda create --name zkcti-venv python=3.9.18 -y
+conda activate zkcti-venv
 ```
 
-### 2. Backend Setup
+---
+
+### 2. Download & Prepare EMBER Malware Dataset
+
+**zkcti uses the EMBER dataset for demonstration and testing. You must download and convert it before running the project.**
+
+**1. Download the dataset**
+Go to [EMBER for Static Malware Analysis on Kaggle](https://www.kaggle.com/datasets/trinhvanquynh/ember-for-static-malware-analysis)
+and download these four files:
+
+* `X_train.dat`
+* `y_train.dat`
+* `X_test.dat`
+* `y_test.dat`
+
+**2. Place the downloaded files in the project’s `data/` directory:**
+
+```
+zkcti/
+└── data/
+    ├── X_train.dat
+    ├── y_train.dat
+    ├── X_test.dat
+    └── y_test.dat
+```
+
+**3. Convert the `.dat` files to Parquet format (required by the backend):**
+
+```sh
+cd data
+python prepare_ember_dataset.py
+```
+
+This will generate:
+
+* `ember_train.parquet`
+* `ember_test.parquet`
+
+in the `backend/data/` directory:
+
+```
+zkcti/
+└── backend/
+    ├── data/
+    │   ├── ember_train.parquet
+    │   └── ember_test.parquet
+```
+
+---
+
+### 3. Backend Setup
 
 ```sh
 cd backend
@@ -241,44 +298,50 @@ pip install -r requirements.txt
   cargo install --git https://github.com/zkonduit/ezkl
   ```
 
-### 3. Model Training & Export
+---
 
-* **Train and Export the model into ONNX format:**
+### 4. Model Training & Export
 
-  ```sh
-  python data/keras_train.py
-  ```
+**Train and export the Keras model into ONNX format:**
 
-* Ensure `ember_train.parquet` and `ember_test.parquet` are present in `backend/data/` or `data/`.
+```sh
+python data/keras_train.py
+```
 
-### 4. Start Backend API
+*Ensure `ember_train.parquet` and `ember_test.parquet` are present in `backend/data/` before this step.*
+
+---
+
+### 5. Start Backend API
 
 ```sh
 cd backend/
 uvicorn main:app --reload
 ```
 
-### 5. Frontend Setup
+---
+
+### 6. Frontend Setup
 
 ```sh
 cd frontend/
-npm install  <------------ for fresh start
+npm install
 npm run dev
 ```
 
-* Access UI at [http://localhost:5173](http://localhost:5173)
-* Backend API at [http://localhost:8000](http://localhost:8000)
+*Access UI at [http://localhost:5173](http://localhost:5173)*
+*Backend API runs at [http://localhost:8000](http://localhost:8000)*
 
 ---
 
 ## 🧑‍💻 How to Use zkcti
 
 1. **Generate Random Test Sample**
-   UI button samples a real EMBER malware/benign vector.
+   UI button samples a real EMBER malware test dataset.
 2. **Predict & Generate Proof**
-   Keras model predicts; SHAP explains features; EZKL produces zk-proof.
+   Keras model predicts; SHAP explains predictions; EZKL produces zk-proof.
 3. **Send Proof**
-   Only the proof (and SHAP explanation, if desired) is sent to the verifier (no data/model ever leaves).
+   Only the proof is sent to the verifier (no data/model ever leaves the prover's system).
 4. **Verify**
    Company B (Verifier) clicks *Verify*, and proof is checked using Halo2.
    If valid, trust is established—no secrets leaked.
@@ -302,7 +365,7 @@ cd backend
 uvicorn main:app --reload
 
 # Start frontend
-cd ../frontend
+cd frontend
 npm run dev
 
 # Advanced: Manual proof workflow
@@ -364,6 +427,6 @@ See [LICENSE](LICENSE).
 
 ## 📬 Contact
 
-**Author:** [Bishal Bist](https://github.com/bisbist?tab=repositories)
+**Author:** [Bishal Bist](bistbishal69@gmail.com)
 * *For research inquiries, or collaborations, feel free to open an issue.*
 
