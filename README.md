@@ -427,6 +427,8 @@ See [LICENSE](LICENSE).
 
 ## 📬 Contact
 
-**Author:** [Bishal Bist](bistbishal69@gmail.com)
-* *For research inquiries, or collaborations, feel free to open an issue.*
+**Author:** Bishal Bist  
+📧 Email: [bistbishal69@gmail.com](mailto:bistbishal69@gmail.com)
+
+For research inquiries or collaborations, feel free to open an [issue](https://github.com/bisbist/zkcti/issues) or contact me directly!
 
